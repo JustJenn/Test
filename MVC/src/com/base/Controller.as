@@ -14,6 +14,7 @@ package com.base
 		{
 			_name = name;
 			_viewComponent = viewComponent;
+			_model = model;
 			ControllerManager.addController(name, this);
 		}
 		

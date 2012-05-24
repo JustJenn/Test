@@ -3,7 +3,7 @@ package com.modules.login
 	import com.base.Controller;
 	import com.base.Model;
 	
-	import flash.events.Event;
+	import starling.events.Event;
 	
 	public class LoginController extends Controller
 	{
@@ -22,7 +22,7 @@ package com.modules.login
 			return _model as LoginModel;
 		}
 		
-		override protected function initialize():void
+		override public function initialize():void
 		{
 			view.addEventListener(EventConts.LOGIN_REQUEST, loginRequestHandler);
 			view.addEventListener(EventConts.REGISTER_REQUEST, registerRequestHandler);

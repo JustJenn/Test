@@ -23,7 +23,7 @@ package com.modules.login
 			super(NAME);
 		}
 		
-		override protected function initialize():void
+		override public function initialize():void
 		{
 			_loginService = new Service("65537", loginResponse);
 			_registerService = new Service("65551", registerResponse);

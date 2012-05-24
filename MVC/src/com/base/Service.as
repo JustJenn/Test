@@ -29,9 +29,9 @@ package com.base
 			SocketManager.sendMessage(_msgID, bytes);
 		}
 		
-		public function response(bytes:ByteArray=null):void
+		public function response(bytes:ByteArray):void
 		{
-			if (_callback)
+			if (_callback != null)
 				_callback(bytes);
 			else
 				Logger.log("Service:id->"+_msgID+" 没有注册回调函数.");

@@ -20,14 +20,15 @@ package com.base
 		{
 			if (textures[name] == undefined)
 			{
-				var bitmap:Bitmap = create(name);
+				var bitmap:Bitmap = create(name) as Bitmap;
 				textures[name] = Texture.fromBitmap(bitmap);
+				bitmap.bitmapData.dispose();
 			}
 			
 			return textures[name];
 		}
 		
-		protected function create(name:String):Bitmap
+		protected function create(name:String):Object
 		{
 			return null;
 		}
