@@ -2,7 +2,7 @@ package com.protocols
 {
 	import com.interfaces.IMessage;
 	
-	import core.utils.StringConverter;
+	import utils.converter.StringConverter;
 	
 	import flash.utils.ByteArray;
 	import flash.utils.Endian;
@@ -32,7 +32,6 @@ package com.protocols
 			buff.endian = Endian.LITTLE_ENDIAN;
 			buff.writeBytes(StringConverter.StringToByteArray(_username, 16));
 			buff.writeBytes(StringConverter.StringToByteArray(_password, 20));
-			return buff;
 		}
 		
 		public function objectToBytes():ByteArray

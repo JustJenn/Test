@@ -2,10 +2,13 @@ package com.base
 {
 	import com.interfaces.IAssetFactory;
 	
+	import utils.debug.Logger;
+	
 	import flash.display.Bitmap;
 	import flash.utils.Dictionary;
 	
 	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
 	
 	public class AssetFactory implements IAssetFactory
 	{
@@ -20,11 +23,37 @@ package com.base
 		{
 			if (textures[name] == undefined)
 			{
-				var bitmap:Bitmap = create(name) as Bitmap;
-				textures[name] = Texture.fromBitmap(bitmap);
-				bitmap.bitmapData.dispose();
+				try
+				{
+					var bitmap:Bitmap = create(name) as Bitmap;
+					textures[name] = Texture.fromBitmap(bitmap);
+					bitmap.bitmapData.dispose();
+				}
+				catch(e:Error)
+				{
+					Logger.log(e.message);
+				}
 			}
-			
+			return textures[name];
+		}
+		
+		public function getTextureAtlas(name:String):TextureAtlas
+		{
+			if (textures[name] == undefined)
+			{
+				try
+				{
+					var bitmap:Bitmap = create(name+"Atlas") as Bitmap;
+					var texture:Texture = Texture.fromBitmap(bitmap);
+					var xml:XML = XML(create(name+"Xml"));
+					textures[name] = new TextureAtlas(texture, xml);
+					bitmap.bitmapData.dispose();
+				}
+				catch(e:Error)
+				{
+					Logger.log(e.message);
+				}
+			}
 			return textures[name];
 		}
 		

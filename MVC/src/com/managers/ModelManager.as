@@ -2,7 +2,7 @@ package com.managers
 {
 	import com.base.Model;
 	
-	import core.debug.Logger;
+	import utils.debug.Logger;
 	
 	import flash.utils.Dictionary;
 

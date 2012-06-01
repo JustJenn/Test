@@ -26,13 +26,13 @@ package com.modules.login
 		{
 			view.addEventListener(EventConts.LOGIN_REQUEST, loginRequestHandler);
 			view.addEventListener(EventConts.REGISTER_REQUEST, registerRequestHandler);
-			model.addEventListener(EventConts.LOGIN_RETURN, loginReturnHandler);
-			model.addEventListener(EventConts.REGISTER_RETURN, registerReturnHandler);
+			model.addEventListener(EventConts.LOGIN_RESPONSE, loginReturnHandler);
+			model.addEventListener(EventConts.REGISTER_RESPONSE, registerReturnHandler);
 		}
 		
 		private function loginRequestHandler(e:Event):void
 		{
-			
+			model.loginRequest(view.account);
 		}
 		private function registerRequestHandler(e:Event):void
 		{

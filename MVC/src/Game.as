@@ -1,8 +1,8 @@
 package
 {
-	import com.modules.login.LoginController;
-	import com.modules.login.LoginModel;
-	import com.modules.login.LoginView;
+	import com.managers.LayerManager;
+	import com.modules.map.MapAssetFactory;
+	import com.modules.map.MapView;
 	
 	import starling.display.Sprite;
 	
@@ -11,13 +11,13 @@ package
 		public function Game()
 		{
 			super();
-			var view:LoginView = new LoginView();
-			view.initialize();
-			addChild(view);
-			var model:LoginModel = new LoginModel();
-			model.initialize();
-			var ctrl:LoginController = new LoginController(model, view);
-			ctrl.initialize();
+			LayerManager.instance.initialize(this);
+			
+//			new LoginModule().initialize();
+
+			var mapView:MapView = new MapView(new MapAssetFactory());
+			addChild(mapView);
+			mapView.initialize();
 		}
 	}
 }

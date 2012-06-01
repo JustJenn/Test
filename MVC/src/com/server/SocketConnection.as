@@ -1,7 +1,7 @@
 package com.server
 {
-	import core.debug.Logger;
-	import core.error.SingletonClassError;
+	import utils.debug.Logger;
+	import utils.error.SingletonClassError;
 	
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;

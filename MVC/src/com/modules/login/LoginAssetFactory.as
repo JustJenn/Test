@@ -11,15 +11,15 @@ package com.modules.login
 	public class LoginAssetFactory extends AssetFactory
 	{
 		[Embed(source="assets/login/background.png")]
-		private static const background:Class;
+		private const background:Class;
 		[Embed(source="assets/login/loginDown.png")]
-		private static const loginDown:Class;
+		private const loginDown:Class;
 		[Embed(source="assets/login/loginUp.png")]
-		private static const loginUp:Class;
+		private const loginUp:Class;
 		[Embed(source="assets/login/registerDown.png")]
-		private static const registerDown:Class;
+		private const registerDown:Class;
 		[Embed(source="assets/login/registerUp.png")]
-		private static const registerUp:Class;
+		private const registerUp:Class;
 
 		public function LoginAssetFactory()
 		{
@@ -27,7 +27,7 @@ package com.modules.login
 		
 		override protected function create(name:String):Object
 		{
-			return new LoginAssetFactory[name]();
+			return new this[name]();
 		}
 	}
 }

@@ -4,7 +4,7 @@ package com.base
 	import com.interfaces.IService;
 	import com.managers.SocketManager;
 	
-	import core.debug.Logger;
+	import utils.debug.Logger;
 	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;

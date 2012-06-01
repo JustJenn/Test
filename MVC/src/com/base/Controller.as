@@ -23,10 +23,6 @@ package com.base
 			
 		}
 		
-		public function set viewComponent(value:Object):void
-		{
-			_viewComponent = value;
-		}
 		public function get viewComponent():Object
 		{
 			return _viewComponent;

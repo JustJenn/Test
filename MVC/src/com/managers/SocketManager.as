@@ -2,7 +2,7 @@ package com.managers
 {
 	import com.server.SocketConnection;
 	
-	import core.debug.Logger;
+	import utils.debug.Logger;
 	
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;

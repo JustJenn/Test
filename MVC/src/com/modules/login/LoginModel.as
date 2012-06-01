@@ -13,11 +13,13 @@ package com.modules.login
 	{
 		public static const NAME:String = "LoginModel";
 		
-		protected var _loginService:IService;
-		protected var _registerService:IService;
-		protected var _loginResult:ActionResult;
-		protected var _registerResult:ActionResult;
+		private var _loginService:IService;
+		private var _registerService:IService;
+		private var _loginResult:ActionResult;
+		private var _registerResult:ActionResult;
 		
+		private var _loginResponseEvent:Event;
+		private var _registerResponseEvent:Event;
 		public function LoginModel()
 		{
 			super(NAME);
@@ -29,17 +31,19 @@ package com.modules.login
 			_registerService = new Service("65551", registerResponse);
 			_loginResult = new ActionResult();
 			_registerResult = new ActionResult();
+			_loginResponseEvent = new Event(EventConts.LOGIN_RESPONSE);
+			_registerResponseEvent = new Event(EventConts.REGISTER_RESPONSE);
 		}
 		
 		private function loginResponse(bytes:ByteArray):void
 		{
 			_loginResult.bytesToObject(bytes);
-			dispatchEvent(new Event(EventConts.LOGIN_RETURN));
+			dispatchEvent(_loginResponseEvent);
 		}
 		private function registerResponse(bytes:ByteArray):void
 		{
 			_loginResult.bytesToObject(bytes);
-			dispatchEvent(new Event(EventConts.REGISTER_RETURN));
+			dispatchEvent(_registerResponseEvent);
 		}
 		
 		public function loginRequest(msg:IMessage):void
