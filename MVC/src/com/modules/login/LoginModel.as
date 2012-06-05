@@ -6,8 +6,9 @@ package com.modules.login
 	import com.interfaces.IService;
 	import com.protocols.ActionResult;
 	
-	import flash.events.Event;
 	import flash.utils.ByteArray;
+	
+	import starling.events.Event;
 	
 	public class LoginModel extends Model
 	{

@@ -3,7 +3,7 @@ package com.base
 	import com.interfaces.IModel;
 	import com.managers.ModelManager;
 	
-	import flash.events.EventDispatcher;
+	import starling.events.EventDispatcher;
 
 	public class Model extends EventDispatcher implements IModel
 	{
