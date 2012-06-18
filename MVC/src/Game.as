@@ -4,6 +4,7 @@ package
 	import com.modules.map.MapAssetFactory;
 	import com.modules.map.MapView;
 	
+	import starling.core.Starling;
 	import starling.display.Sprite;
 	
 	public class Game extends Sprite

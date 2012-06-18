@@ -13,18 +13,17 @@ package
 		{
 			super();
 			
-			Starling.multitouchEnabled = true;
+			Starling.multitouchEnabled = false;
 			Starling.handleLostContext = false;
 			
-//			var viewPort:Rectangle =  new Rectangle(0, 0, stage.fullScreenWidth, stage.fullScreenHeight);
-			var viewPort:Rectangle =  new Rectangle(0, 0, 960, 640);
+			var viewPort:Rectangle =  new Rectangle(0, 0, stage.fullScreenWidth, stage.fullScreenHeight);
 			
 			if (viewPort.height == 768) // iPad 1+2
 				viewPort.setTo(32, 64, 960, 640);
 			else if (viewPort.height == 1536) // iPad 3
 				viewPort.setTo(64, 128, 1920, 1280);
 			
-			_starling = new Starling(Game, stage, viewPort);
+			_starling = new Starling(Game, stage);
 			_starling.showStats = true;
 			_starling.simulateMultitouch = false;
 			_starling.enableErrorChecking = false;

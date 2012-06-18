@@ -19,12 +19,12 @@ package utils.astar
 		
 		public function get isBlock():Boolean
 		{
-			return !Boolean(_flag);
+			return Boolean(_flag);
 		}
 		
 		public function get row():int
 		{
-			return _row
+			return _row;
 		}
 		
 		public function get col():int

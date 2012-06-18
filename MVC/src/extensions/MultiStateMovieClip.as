@@ -58,9 +58,16 @@ package extensions
 				changeTextures(frame.textures);
 		}
 		
-		protected function changeTextures(textures:Vector.<Texture>):void
+		private function changeTextures(textures:Vector.<Texture>):void
 		{
 			stop();
+			resetFrame(textures);
+			resetInfo();
+			play();
+		}
+		
+		private function resetFrame(textures:Vector.<Texture>):void
+		{
 			var length:int = textures.length;
 			for (var i:int=0; i<length; i++)
 			{
@@ -76,9 +83,14 @@ package extensions
 				removeFrameAt(length);
 			}
 			texture = textures[0];
+		}
+		
+		private function resetInfo():void
+		{
+			var sign:int = scaleX > 0? 1:-1;
 			width = texture.width;
 			height = texture.height;
-			play();
+			scaleX *= sign;
 		}
 		
 		public function getKeyFrame(name:String):KeyFrame

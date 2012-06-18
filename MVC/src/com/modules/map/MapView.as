@@ -8,7 +8,6 @@ package com.modules.map
 	import extensions.KeyFrame;
 	
 	import flash.geom.Point;
-	import flash.utils.setTimeout;
 	
 	import starling.core.Starling;
 	import starling.display.Image;
@@ -23,13 +22,13 @@ package com.modules.map
 	
 	public class MapView extends View
 	{
+		private const MOVE_STEP:int = 5;
 		private var background:Background;
 		private var role:Role;
 		private var camera:StarlingCameraFocus;
 		private var target:Point;
 		private var isRunning:Boolean = false;
 		private var speed:Point;
-		
 		
 		public function MapView(assetFactory:IAssetFactory=null)
 		{
@@ -41,7 +40,8 @@ package com.modules.map
 			createBackground();
 			createRole();
 			
-			var layersInfo:Array = [{name:'background', instance:background, ratio:0}];
+			var layersInfo:Array = [{name:"background", instance:background, ratio:0},
+									{name:'role', instance:role, ratio:0}];
 			
 			camera = new StarlingCameraFocus(Starling.current.stage, this, role, layersInfo);
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
@@ -49,14 +49,14 @@ package com.modules.map
 			camera.setBoundary(background);
 			camera.start();
 			
-			target = new Point(role.x, role.y);
+			target = role.position.clone();
 		}
 		
 		private function onEnterFrame(e:Event):void
 		{
-			camera.update();
-			
 			updateRole();
+			
+			camera.update();
 		}
 		
 		private function updateRole():void
@@ -65,16 +65,17 @@ package com.modules.map
 			{
 				var dir:Point = target.subtract(role.position);
 				var distance:Number = Math.sqrt(dir.x*dir.x+dir.y*dir.y);
-				if (distance > 5)
+				if (distance > MOVE_STEP)
 				{
-					role.x += 5*speed.x;
-					role.y += 5*speed.y;
+					role.x += speed.x;
+					role.y += speed.y;
 				}
 				else
 				{
 					role.x = target.x;
 					role.y = target.y;
 					role.stand();
+					isRunning = false;
 				}
 			}
 		}
@@ -86,7 +87,7 @@ package com.modules.map
 			{
 				target = touch.getLocation(background);
 				speed = target.subtract(role.position);
-				speed.normalize(1);
+				speed.normalize(MOVE_STEP);
 				if (target.x > role.x)
 					role.playFrame(Role.RUN_RIGHT);
 				else
@@ -118,7 +119,7 @@ package com.modules.map
 			role = new Role(standRight,24);
 			role.addKeyFrame(runRight);
 			role.x = 400;
-			role.y = 200;
+			role.y = 500;
 			addChild(role);
 			Starling.current.juggler.add(role.mc);
 		}

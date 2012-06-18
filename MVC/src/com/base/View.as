@@ -11,8 +11,8 @@ package com.base
 		
 		public function View(assetFactory:IAssetFactory=null)
 		{
-			_assetFactory = assetFactory;
 			super();
+			_assetFactory = assetFactory;
 		}
 		
 		public function initialize():void

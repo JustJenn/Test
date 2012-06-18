@@ -24,6 +24,10 @@ package com.modules.map.part
 			
 			offset += part.width;
 		}
+		public function get part3():Image
+		{
+			return parts[2];
+		}
 		
 		public function destroy():void
 		{

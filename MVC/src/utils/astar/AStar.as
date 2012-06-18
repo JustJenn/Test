@@ -1,40 +1,60 @@
 package utils.astar
 {
 	import flash.geom.Point;
+	
+	import utils.debug.Logger;
 
 	public class AStar
 	{
 		private var _map:Vector.<Vector.<MapNode>>;
 		private var _openNodeList:Vector.<MapNode>;
 		private var _closeNodeList:Vector.<MapNode>;
+		private var _adjacents:Vector.<Point>; //相邻节点
 		
 		private var _left:int;
 		private var _top:int;
 		private var _right:int;
 		private var _bottom:int;
 		
-		private var _dirStep:int;	//四方向(2) or 八方向(1)
-		
-		public function AStar(map:Vector.<Vector.<MapNode>>, isSimple:Boolean=false)
+		public function AStar(map:Vector.<Vector.<MapNode>>)
 		{
 			_map = map;
 			_openNodeList = new Vector.<MapNode>();
 			_closeNodeList = new Vector.<MapNode>();
+			_adjacents = getAdjacents();
 			
 			_left = _top = 0;
 			_right = map[0].length - 1;
 			_bottom = map.length - 1;
-			
-			_dirStep = (isSimple? 2 : 1);
 		}
 		
-		private function clear():void
+		private function getAdjacents():Vector.<Point>
 		{
-			_openNodeList.splice(0, _openNodeList.length);
-			_closeNodeList.splice(0, _closeNodeList.length);
+			var adjs:Vector.<Point> = new Vector.<Point>();
+			adjs[0] = new Point( 1,  0);
+			adjs[1] = new Point( 1,  1);
+			adjs[2] = new Point( 0,  1);
+			adjs[3] = new Point(-1,  1);
+			adjs[4] = new Point(-1,  0);
+			adjs[5] = new Point(-1, -1);
+			adjs[6] = new Point( 0, -1);
+			adjs[7] = new Point( 1, -1);
+			return adjs;
 		}
 		
 		public function findPath(from:Point, to:Point):Vector.<Point>
+		{
+			Logger.record();
+			var isFound:Boolean = finding(from, to);
+			Logger.cost("寻路花费时间:");
+			
+			clear();
+			if (isFound)
+				return getPath(from, to);
+			return null;
+		}
+		
+		private function finding(from:Point, to:Point):Boolean
 		{
 			var node:MapNode = _map[from.x][from.y];
 			node.g = 0;
@@ -48,22 +68,23 @@ package utils.astar
 				node = _openNodeList.shift();
 				
 				if (node.row == to.x && node.col == to.y)
-				{
-					clear();
-					return getPath(from, to);
-				}
+					return true;
 				
 				_closeNodeList.push(node);
-				
 				checkAdjacent(node, to);
-				
 			}
-			clear();
-			return null;
+			return false;
 		}
+		
 		private function costCompare(node1:MapNode, node2:MapNode):int
 		{
 			return node1.f - node2.f;
+		}
+		
+		private function clear():void
+		{
+			_openNodeList.splice(0, _openNodeList.length);
+			_closeNodeList.splice(0, _closeNodeList.length);
 		}
 		
 		private function checkAdjacent(node:MapNode, to:Point):void
@@ -74,7 +95,7 @@ package utils.astar
 			var child:MapNode;
 			var pt:Point;
 			
-			for (var i:int=0;i<8;i+=_dirStep)
+			for (var i:int=0;i<8;i++)
 			{
 				pt = getAdjacent(node.row, node.col, i);
 				if (pt.x < _top || pt.x > _bottom || pt.y < _left || pt.y > _right)
@@ -94,38 +115,7 @@ package utils.astar
 		private function getAdjacent(row:int, col:int, dir:int):Point
 		{
 			var pt:Point = new Point(row, col);
-			switch(dir)
-			{
-				case 0:
-					pt.x ++;
-					break;
-				case 1:
-					pt.x ++;
-					pt.y --;
-					break;
-				case 2:
-					pt.y --;
-					break;
-				case 3:
-					pt.x --;
-					pt.y --;
-					break;
-				case 4:
-					pt.x --;
-					break;
-				case 5:
-					pt.x --;
-					pt.y ++;
-					break;
-				case 6:
-					pt.y ++;
-					break;
-				case 7:
-					pt.x ++;
-					pt.y ++;
-					break;
-			}
-			return pt;
+			return pt.add(_adjacents[dir]);
 		}
 		
 		private function checkNode(g:int, h:int, f:int, node:MapNode, parent:MapNode):void
@@ -175,7 +165,7 @@ package utils.astar
 				node = node.parent;
 				path.push(new Point(node.row, node.col));
 			}
-			return path
+			return path;
 		}
 	}
 }

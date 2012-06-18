@@ -8,6 +8,8 @@ package com.modules.map.part
 	import starling.display.MovieClip;
 	import starling.display.Sprite;
 	
+	import utils.debug.Logger;
+	
 	public class Role extends Sprite
 	{
 		public static const STAND_RIGHT:String = "stand_right";
@@ -22,12 +24,20 @@ package com.modules.map.part
 		public function Role(defaultFrame:KeyFrame, fps:int=12)
 		{
 			super();
+			initialize(defaultFrame, fps);
+		}
+		
+		private function initialize(defaultFrame:KeyFrame, fps:int):void
+		{
 			_mc = new MultiStateMovieClip(defaultFrame, fps);
+			_mc.x = -_mc.width/2;
 			_mc.y = -_mc.height;
 			addChild(_mc);
-			_direction = defaultFrame.name;
 			
+			_direction = defaultFrame.name;
 			_position = new Point(x,y);
+			
+			touchable = false;
 		}
 		
 		public function addKeyFrame(frame:KeyFrame):void
@@ -46,8 +56,8 @@ package com.modules.map.part
 				_mc.playFrame(dir);
 				if (_mc.scaleX < 0)
 				{
-					_mc.scaleX = 1;
-					_mc.x = 0;
+					_mc.scaleX = -_mc.scaleX;
+					_mc.x = -_mc.width/2;
 				}
 			}
 			else
@@ -56,10 +66,11 @@ package com.modules.map.part
 				_mc.playFrame(dir);
 				if (_mc.scaleX > 0)
 				{
-					_mc.scaleX = -1;
-					_mc.x = _mc.width;
+					_mc.scaleX = -_mc.scaleX;
+					_mc.x = _mc.width/2;
 				}
 			}
+//			Logger.log("action:"+_direction);
 		}
 		
 		public function stand():void
