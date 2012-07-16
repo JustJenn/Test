@@ -7,14 +7,18 @@ package com.modules.map
 	
 	import extensions.KeyFrame;
 	
+	import flash.events.TimerEvent;
 	import flash.geom.Point;
+	import flash.utils.Timer;
 	
 	import starling.core.Starling;
+	import starling.display.Button;
 	import starling.display.Image;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	import starling.text.TextField;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	
@@ -26,9 +30,16 @@ package com.modules.map
 		private var background:Background;
 		private var role:Role;
 		private var camera:StarlingCameraFocus;
-		private var target:Point;
-		private var isRunning:Boolean = false;
-		private var speed:Point;
+		
+		private var textureAtlas:TextureAtlas;
+		private var roleList:Vector.<Role>;
+		
+		[Embed(source="assets/map/up.png")]
+		private var up:Class;
+		[Embed(source="assets/map/down.png")]
+		private var down:Class;
+		
+		private var tf:TextField;
 		
 		public function MapView(assetFactory:IAssetFactory=null)
 		{
@@ -38,18 +49,44 @@ package com.modules.map
 		override public function initialize():void
 		{
 			createBackground();
-			createRole();
 			
-			var layersInfo:Array = [{name:"background", instance:background, ratio:0},
-									{name:'role', instance:role, ratio:0}];
+			textureAtlas = assetFactory.getTextureAtlas("role");
+			roleList = new Vector.<Role>();
 			
-			camera = new StarlingCameraFocus(Starling.current.stage, this, role, layersInfo);
-			addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			addEventListener(TouchEvent.TOUCH, onTouch);
-			camera.setBoundary(background);
-			camera.start();
+			role = createRole();
+			role.x = 300;
+			role.y = 400;
+			createCamera();
 			
-			target = role.position.clone();
+			for (var i:int=0;i<10;i++)
+			{
+				roleList.push(createRole());
+			}
+			
+			var timer:Timer = new Timer(1000);
+			timer.addEventListener(TimerEvent.TIMER, onTimer);
+			timer.start();
+			
+			
+			var downTxt:Texture = Texture.fromBitmap(new down());
+			var upTxt:Texture = Texture.fromBitmap(new up());
+			var btn:Button = new Button(upTxt, "增加10个", downTxt);
+			btn.fontColor = 0xffffff;
+			btn.width = 110;
+			btn.height = 50;
+			btn.fontSize = 20;
+			btn.x = 100;
+			btn.y = 580;
+			btn.addEventListener(Event.TRIGGERED, onTriggered);
+			parent.addChild(btn);
+			
+			tf = new TextField(300,30,"");
+			tf.x = 210;
+			tf.y = 590;
+			tf.fontSize = 20;
+			tf.color = 0xff0000;
+			parent.addChild(tf);
+			tf.text = "当前人数："+(roleList.length+1);
 		}
 		
 		private function onEnterFrame(e:Event):void
@@ -61,38 +98,22 @@ package com.modules.map
 		
 		private function updateRole():void
 		{
-			if (isRunning)
+			var length:int = roleList.length;
+			
+			for (var i:int=0;i<length;i++)
 			{
-				var dir:Point = target.subtract(role.position);
-				var distance:Number = Math.sqrt(dir.x*dir.x+dir.y*dir.y);
-				if (distance > MOVE_STEP)
-				{
-					role.x += speed.x;
-					role.y += speed.y;
-				}
-				else
-				{
-					role.x = target.x;
-					role.y = target.y;
-					role.stand();
-					isRunning = false;
-				}
+				roleList[i].update();
 			}
+			
+			role.update();
 		}
 		
 		private function onTouch(e:TouchEvent):void
 		{
-			var touch:Touch = e.getTouch(this);
-			if (touch && touch.phase == TouchPhase.BEGAN)
+			var touch:Touch = e.getTouch(this, TouchPhase.ENDED);
+			if (touch)
 			{
-				target = touch.getLocation(background);
-				speed = target.subtract(role.position);
-				speed.normalize(MOVE_STEP);
-				if (target.x > role.x)
-					role.playFrame(Role.RUN_RIGHT);
-				else
-					role.playFrame(Role.RUN_LEFT);
-				isRunning = true;
+				role.move(touch.getLocation(background));
 			}
 		}
 		
@@ -111,17 +132,50 @@ package com.modules.map
 			background.flatten();
 			addChild(background);
 		}
-		private function createRole():void
+		
+		private function createRole():Role
 		{
-			var textureAtlas:TextureAtlas = assetFactory.getTextureAtlas("role");
 			var standRight:KeyFrame = new KeyFrame(Role.STAND_RIGHT, textureAtlas.getTextures("stand"));
 			var runRight:KeyFrame = new KeyFrame(Role.RUN_RIGHT, textureAtlas.getTextures("run"));
-			role = new Role(standRight,24);
-			role.addKeyFrame(runRight);
-			role.x = 400;
-			role.y = 500;
-			addChild(role);
-			Starling.current.juggler.add(role.mc);
+			var man:Role = new Role(standRight,24);
+			man.addKeyFrame(runRight);
+			man.x = Math.random()*2600;
+			man.y = int(340+Math.random()*160);
+			addChildAt(man, 1);
+			Starling.current.juggler.add(man.mc);
+			
+			return man;
+		}
+		
+		private function createCamera():void
+		{
+			var layersInfo:Array = [{name:"background", instance:background, ratio:0},
+				{name:'role', instance:role, ratio:0}];
+			
+			camera = new StarlingCameraFocus(Starling.current.stage, this, role, layersInfo);
+			addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			addEventListener(TouchEvent.TOUCH, onTouch);
+			camera.setBoundary(background);
+			camera.start();
+		}
+		
+		private function onTimer(e:TimerEvent):void
+		{
+			var length:int = roleList.length;
+			
+			for (var i:int=0;i<length;i++)
+			{
+				roleList[i].randMove();
+			}
+		}
+		
+		private function onTriggered(e:Event):void
+		{
+			for (var i:int=0;i<10;i++)
+			{
+				roleList.push(createRole());
+			}
+			tf.text = "当前人数："+(roleList.length+1);
 		}
 	}
 }
