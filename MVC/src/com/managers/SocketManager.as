@@ -2,31 +2,32 @@ package com.managers
 {
 	import com.server.SocketConnection;
 	
-	import utils.debug.Logger;
-	
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
+	
+	import utils.debug.Logger;
 
 	public class SocketManager
 	{
 		private static var dict:Dictionary = new Dictionary();
 		
-		public static function registerCallback(key:String, func:Function):void
+		public static function registerCallback(dest:uint, cmd:uint, func:Function):void
 		{
+			var key:String = dest + "-" + cmd;
 			if (!dict[key])
 				dict[key] = func;
 			else
 				Logger.log("已经注册协议"+key+"回调函数.");
 		}
 		
-		public static function removeCallback(key:String):void
+		public static function removeCallback(dest:uint, cmd:uint):void
 		{
-			delete dict[key];
+			delete dict[dest+"-"+cmd];
 		}
 		
-		public static function sendMessage(id:String, content:ByteArray):void
+		public static function sendMessage(dest:uint, cmd:uint, content:ByteArray):void
 		{
-			SocketConnection.instance.writeToSocket(id as uint, content);
+			SocketConnection.instance.writeToSocket(dest, cmd, content);
 		}
 		
 		public static function callback(key:String, content:ByteArray):void

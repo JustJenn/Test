@@ -1,27 +1,21 @@
-package com.base
+package com.bases
 {
 	import com.interfaces.IModel;
-	import com.managers.ModelManager;
 	
 	import starling.events.EventDispatcher;
 
 	public class Model extends EventDispatcher implements IModel
 	{
-		private var _name:String;
-		public function Model(name:String)
+		public function Model()
 		{
-			ModelManager.addModel(name, this);
-			_name = name;
 		}
 		
 		public function initialize():void
 		{
-			
 		}
 		
 		public function destroy():void
 		{
-			ModelManager.removeModel(_name);
 		}
 	}
 }

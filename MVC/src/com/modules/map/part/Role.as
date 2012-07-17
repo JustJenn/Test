@@ -147,7 +147,7 @@ package com.modules.map.part
 			var m:Boolean = Math.random()>0.5;
 			if (m)
 			{
-				var tg:Point = new Point(int(Math.random()*2600),int(340+Math.random()*160));
+				var tg:Point = new Point(int(Math.random()*2600),int(340+Math.random()*260));
 				move(tg);
 			}
 		}

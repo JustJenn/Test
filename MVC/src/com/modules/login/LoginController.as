@@ -1,7 +1,7 @@
 package com.modules.login
 {
-	import com.base.Controller;
-	import com.base.Model;
+	import com.bases.Controller;
+	import com.bases.Model;
 	
 	import starling.events.Event;
 	

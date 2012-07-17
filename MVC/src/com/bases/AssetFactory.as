@@ -1,4 +1,4 @@
-package com.base
+package com.bases
 {
 	import com.interfaces.IAssetFactory;
 	

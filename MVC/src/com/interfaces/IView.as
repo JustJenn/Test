@@ -1,9 +1,10 @@
 package com.interfaces
 {
-	public interface IView
+	
+
+	public interface IView extends IEventDispatcher
 	{
-		function initialize():void;
-		function get assetFactory():IAssetFactory;
+		function initialize(model:IModel=null, assets:IAssetFactory=null):void;
 		function destroy():void;
 	}
 }

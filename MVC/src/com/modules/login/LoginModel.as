@@ -1,7 +1,7 @@
 package com.modules.login
 {
-	import com.base.Model;
-	import com.base.Service;
+	import com.bases.Model;
+	import com.bases.SocketService;
 	import com.interfaces.IMessage;
 	import com.interfaces.IService;
 	import com.protocols.ActionResult;
@@ -28,8 +28,8 @@ package com.modules.login
 		
 		override public function initialize():void
 		{
-			_loginService = new Service("65537", loginResponse);
-			_registerService = new Service("65551", registerResponse);
+			_loginService = new SocketService("65537", loginResponse);
+			_registerService = new SocketService("65551", registerResponse);
 			_loginResult = new ActionResult();
 			_registerResult = new ActionResult();
 			_loginResponseEvent = new Event(EventConts.LOGIN_RESPONSE);

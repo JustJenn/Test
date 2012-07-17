@@ -1,7 +1,8 @@
 package com.modules.map
 {
-	import com.base.View;
+	import com.bases.View;
 	import com.interfaces.IAssetFactory;
+	import com.interfaces.IModel;
 	import com.modules.map.part.Background;
 	import com.modules.map.part.Role;
 	
@@ -41,16 +42,17 @@ package com.modules.map
 		
 		private var tf:TextField;
 		
-		public function MapView(assetFactory:IAssetFactory=null)
+		public function MapView()
 		{
-			super(assetFactory);
+			super();
 		}
 		
-		override public function initialize():void
+		override public function initialize(model:IModel=null, assets:IAssetFactory=null):void
 		{
+			super.initialize(model, assets);
 			createBackground();
 			
-			textureAtlas = assetFactory.getTextureAtlas("role");
+			textureAtlas = _assets.getTextureAtlas("role");
 			roleList = new Vector.<Role>();
 			
 			role = createRole();
@@ -125,7 +127,7 @@ package com.modules.map
 			background = new Background();
 			for (var i:int=1;i<4;i++)
 			{
-				texture = assetFactory.getTexture("mapPart"+i);
+				texture = _assets.getTexture("mapPart"+i);
 				part = new Image(texture);
 				background.addPart(part);
 			}
@@ -140,7 +142,7 @@ package com.modules.map
 			var man:Role = new Role(standRight,24);
 			man.addKeyFrame(runRight);
 			man.x = Math.random()*2600;
-			man.y = int(340+Math.random()*160);
+			man.y = int(340+Math.random()*260);
 			addChildAt(man, 1);
 			Starling.current.juggler.add(man.mc);
 			

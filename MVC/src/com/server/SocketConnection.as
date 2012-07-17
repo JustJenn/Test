@@ -1,14 +1,15 @@
 package com.server
 {
-	import utils.debug.Logger;
-	import utils.error.SingletonClassError;
-	
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
 	import flash.events.SecurityErrorEvent;
 	import flash.net.Socket;
+	import flash.system.Security;
 	import flash.utils.ByteArray;
+	
+	import utils.debug.Logger;
+	import utils.error.SingletonClassError;
 	
 	public class SocketConnection
 	{
@@ -22,12 +23,17 @@ package com.server
 		protected var _port:int;
 		protected var _readBuff:ByteArray;
 		protected var _contentBuff:ByteArray;
-		public function SocketConnection()
+		public function SocketConnection(host:String, port:int)
 		{
 			if (_instance != null)
 				throw new SingletonClassError();
 			_readBuff = new ByteArray();
 			_contentBuff = new ByteArray();
+			_host = host;
+			_port = port;
+			
+			Logger.log("xmlsocket://" + _host + ":" + _port);
+			Security.loadPolicyFile("xmlsocket://" + _host + ":" + _port);
 			
 			_socket = new Socket();	
 			_socket.addEventListener(Event.CONNECT,onConnect);
@@ -42,12 +48,10 @@ package com.server
 			return _instance;
 		}
 		
-		public function connect(host:String, port:int):void
+		public function connect():void
 		{
 			if (!_socket.connected)
 			{
-				_host = host;
-				_port = port;
 				_socket.connect(_host,_port);
 				Logger.log("connecting:"+_host+":"+_port);
 			}
@@ -55,6 +59,7 @@ package com.server
 		private function onConnect(event:Event):void
 		{
 			Logger.log("connect succeed.");
+			
 			_socket.addEventListener(ProgressEvent.SOCKET_DATA,onSocketData);
 			_socket.addEventListener(Event.CLOSE,onDisconnect);
 		}
@@ -98,18 +103,19 @@ package com.server
 			Logger.log("socket disconnect.");
 		}
 		
-		public function writeToSocket(id:uint, content:ByteArray=null):void
+		public function writeToSocket(dest:uint, cmd:uint, content:ByteArray=null):void
 		{
 			var length:int = 0;
 			if (_socket.connected)
 			{
 				try
 				{
-					Logger.log("send message to server: id-->"+id+" content-->"+content.toString());
+					Logger.log("send message to server: id-->"+dest+"-"+cmd+" content-->"+content.toString());
 					_socket.writeShort(PACKAGE_HEAD);
 					length = content.length+10;
 					_socket.writeUnsignedInt(length);
-					_socket.writeUnsignedInt(id);
+					_socket.writeUnsignedInt(dest);
+					_socket.writeUnsignedInt(cmd);
 					_socket.writeBytes(content,0,content.length);
 					_socket.flush();
 				}

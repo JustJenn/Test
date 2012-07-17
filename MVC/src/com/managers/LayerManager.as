@@ -1,17 +1,23 @@
 package com.managers
 {
-	import utils.error.SingletonClassError;
+	import com.layers.BaseLayer;
+	import com.layers.ModalLayer;
+	import com.layers.SceneLayer;
+	import com.layers.UILayer;
+	import com.layers.WindowLayer;
 	
 	import starling.display.Sprite;
+	
+	import utils.error.SingletonClassError;
 
 	public class LayerManager
 	{
-		private static var _instance:LayerManager
+		private static var _instance:LayerManager = null;
 		
-		private var _map:Sprite;
-		private var _ui:Sprite;
-		private var _fight:Sprite;
-		private var _popup:Sprite;
+		private var _scene:BaseLayer;
+		private var _ui:BaseLayer;
+		private var _window:BaseLayer;
+		private var _modal:BaseLayer;
 		
 		public function LayerManager()
 		{
@@ -28,35 +34,35 @@ package com.managers
 		
 		public function initialize(root:Sprite):void
 		{
-			_map = new Sprite();
-			_ui = new Sprite();
-			_fight = new Sprite();
-			_popup = new Sprite();
+			_scene = new SceneLayer();
+			_ui = new UILayer();
+			_window = new WindowLayer();
+			_modal = new ModalLayer();
 			
-			root.addChild(_map);
+			root.addChild(_scene);
 			root.addChild(_ui);
-			root.addChild(_fight);
-			root.addChild(_popup);
+			root.addChild(_window);
+			root.addChild(_modal);
 		}
 		
-		public function get mapLayer():Sprite
+		public function get scene():BaseLayer
 		{
-			return _map;
+			return _scene;
 		}
 		
-		public function get uiLayer():Sprite
+		public function get ui():BaseLayer
 		{
 			return _ui;
 		}
 		
-		public function get fightLayer():Sprite
+		public function get window():BaseLayer
 		{
-			return _fight;
+			return _window;
 		}
 		
-		public function get popupLayer():Sprite
+		public function get modal():BaseLayer
 		{
-			return _popup;
+			return _modal;
 		}
 	}
 }

@@ -14,7 +14,7 @@ package com.modules.login
 			var view:LoginView = new LoginView(new LoginAssetFactory());
 			view.initialize();
 			view.flatten();
-			LayerManager.instance.uiLayer.addChild(view);
+			LayerManager.instance.ui.addChild(view);
 			
 			var model:LoginModel = new LoginModel();
 			model.initialize();

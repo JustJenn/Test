@@ -1,6 +1,6 @@
 package com.modules.map
 {
-	import com.base.AssetFactory;
+	import com.bases.AssetFactory;
 	
 	public class MapAssetFactory extends AssetFactory
 	{

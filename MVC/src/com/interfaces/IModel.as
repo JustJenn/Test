@@ -1,6 +1,8 @@
 package com.interfaces
 {
-	public interface IModel
+	import starling.events.Event;
+
+	public interface IModel extends IEventDispatcher
 	{
 		function initialize():void;
 		function destroy():void;

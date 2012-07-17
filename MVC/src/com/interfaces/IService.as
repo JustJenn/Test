@@ -1,6 +1,5 @@
 package com.interfaces
 {
-	import flash.events.IEventDispatcher;
 	import flash.utils.ByteArray;
 
 	public interface IService
