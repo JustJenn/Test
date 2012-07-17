@@ -4,25 +4,29 @@ package com.xiaocai.components
 
 	public class Label extends Component
 	{
-		protected var _tf:TextField;
+		protected var _textField:TextField;
 		protected var _text:String = "";
-		protected var _textWidth:Number;
-		protected var _textHeight:Number;
 		
-		public function Label(xpos:Number = 0, ypos:Number = 0, text:String = "", textWidth:Number = 50, textHeight:Number = 18)
+		public function Label(xpos:Number = 0, ypos:Number = 0, text:String = "")
 		{
 			_text = text;
-			_textWidth = textWidth;
-			_textHeight = textHeight;
 			super(xpos, ypos);
+		}
+		
+		override protected function init():void
+		{
+			setSize(50, 20);
+			super.init();
 		}
 		
 		override protected function createChildren():void
 		{
-			_tf = new TextField(_textWidth, _textHeight, _text);
-			_tf.touchable = false;
-			addChild(_tf);
-			draw();
+			super.createChildren();
+			
+			_textField = new TextField(_width, _height, _text);
+			addChild(_textField);
+
+			touchable = false;
 		}
 		
 		///////////////////////////////////
@@ -33,29 +37,31 @@ package com.xiaocai.components
 		{
 			super.draw();
 			
-			_tf.text = _text;
-			_tf.width = _textWidth;
-			_tf.height = _textHeight;
-			_width = _tf.width;
-			_height = _tf.height;
+			_textField.text = _text;
+			_textField.width = _width;
+			_textField.height = _height;
 		}
 		
 		override public function dispose():void
 		{
+			removeChild(_textField, true);
+			
 			super.dispose();
-			_tf.removeFromParent(true);
-			_tf = null;
 		}
 		
 		///////////////////////////////////
-		// getter/setters
+		// getters/setters
 		///////////////////////////////////
+		
+		override public function set touchable(value:Boolean):void
+		{
+			super.touchable = value;
+			_textField.touchable = value;
+		}
 		
 		public function set text(value:String):void
 		{
-			_text = value;
-			if (_text == null)
-				_text = "";
+			_text = value || "";
 			invalidate();
 		}
 		
@@ -64,9 +70,49 @@ package com.xiaocai.components
 			return _text;
 		}
 		
-		public function get textFiled():TextField
+		public function set fontName(value:String):void
 		{
-			return _tf;
+			_textField.fontName = value;
+		}
+		
+		public function set fontSize(value:Number):void
+		{
+			_textField.fontSize = value;
+		}
+		
+		public function set fontColor(value:uint):void
+		{
+			_textField.color = value;
+		}
+		
+		public function set fontBold(value:Boolean):void
+		{
+			_textField.bold = value;
+		}
+		
+		public function set fontItalic(value:Boolean):void
+		{
+			_textField.italic = value;
+		}
+		
+		public function set fontUnderline(value:Boolean):void
+		{
+			_textField.underline = value;
+		}
+		
+		public function set vAlign(value:String):void
+		{
+			_textField.vAlign = value;
+		}
+		
+		public function set hAlign(value:String):void
+		{
+			_textField.hAlign = value;
+		}
+		
+		public function get textField():TextField
+		{
+			return _textField;
 		}
 	}
 }

@@ -1,7 +1,5 @@
 package com.xiaocai.components
 {
-	import flash.geom.Rectangle;
-	
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
@@ -9,13 +7,19 @@ package com.xiaocai.components
 	import starling.utils.HAlign;
 	import starling.utils.VAlign;
 
-	public class Button extends Component
+	[Event(name="state_change", type="starling.events.Event")]
+	public class CheckBox extends Component
 	{
+		public static const STATE_CHANGE:String = "state_change";
+		
+		private static const PADDING_LEFT:Number = 20;
+		private static const PADDING_TOP:Number = 0;
+		
 		protected var _label:Label;
 		protected var _labelText:String = "";
-		protected var _isDown:Boolean = false;
+		protected var _selected:Boolean = false;
 		
-		public function Button(xpos:Number=0, ypos:Number=0, skin:Object=null, label:String="")
+		public function CheckBox(xpos:Number=0, ypos:Number=0,skin:Object=null, label:String="")
 		{
 			_labelText = label;
 			super(xpos, ypos, skin);
@@ -23,7 +27,7 @@ package com.xiaocai.components
 		
 		override protected function init():void
 		{
-			setSize(50,30);
+			setSize(70,20);
 			super.init();
 		}
 		
@@ -31,7 +35,9 @@ package com.xiaocai.components
 		{
 			super.createChildren();
 			
-			_label = new Label(0, 0, _labelText);
+			_label = new Label(20,0,_labelText);
+			_label.hAlign = HAlign.LEFT;
+			_label.touchable = true;
 			addChild(_label);
 			
 			addEventListener(TouchEvent.TOUCH, onTouch);
@@ -39,51 +45,32 @@ package com.xiaocai.components
 		
 		protected function onTouch(e:TouchEvent):void
 		{
-			var touch:Touch = e.getTouch(this);
-			if (!enabled || touch == null) 
-				return;
-			
-			if (touch.phase == TouchPhase.BEGAN && !_isDown)
+			var touch:Touch = e.getTouch(this, TouchPhase.ENDED);
+			if (touch && enabled)
 			{
-				if (_skin)
-					_skin.currentState = "down";
-				_label.y = 2;
-				_isDown = true;
-			}
-			else if (touch.phase == TouchPhase.MOVED && _isDown)
-			{
-				var buttonRect:Rectangle = getBounds(stage);
-				if (touch.globalX < buttonRect.x || touch.globalY < buttonRect.y ||
-					touch.globalX > buttonRect.x + buttonRect.width ||
-					touch.globalY > buttonRect.y + buttonRect.height )
-				{
-					onRollOut();
-				}
-			}
-			else if (touch.phase == TouchPhase.ENDED && _isDown)
-			{
-				onRollOut();
-				dispatchEventWith(Event.TRIGGERED, true);
+				_selected = !_selected;
+				updateState();
+				if (hasEventListener(STATE_CHANGE))
+					dispatchEvent(new Event(STATE_CHANGE));
 			}
 		}
 		
-		protected function onRollOut():void
+		protected function updateState():void
 		{
-			_isDown = false;
 			if (_skin)
-				_skin.currentState = "up";
-			_label.y = 0;
+				_skin.currentState = _selected ? "selected":"notSelected";
 		}
 		
-		/////////////////////////////////
+		///////////////////////////////////
 		// public methods
-		/////////////////////////////////
+		///////////////////////////////////
+		
 		override public function draw():void
 		{
 			super.draw();
 			
 			_label.text = _labelText;
-			_label.setSize(_width, _height);
+			_label.setSize(_width - PADDING_LEFT, _height - PADDING_TOP);
 		}
 		
 		override public function dispose():void
@@ -97,7 +84,6 @@ package com.xiaocai.components
 		////////////////////////////////
 		// getters/setters
 		////////////////////////////////
-		
 		public function set labelText(value:String):void
 		{
 			_labelText = value;
@@ -108,9 +94,15 @@ package com.xiaocai.components
 			return _labelText;
 		}
 		
-		public function get label():Label
+		public function set selected(value:Boolean):void
 		{
-			return _label;
+			_selected = value;
+			updateState();
+		}
+		
+		public function get selected():Boolean
+		{
+			return _selected;
 		}
 	}
 }

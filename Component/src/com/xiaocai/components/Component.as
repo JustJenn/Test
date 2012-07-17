@@ -1,5 +1,9 @@
 package com.xiaocai.components
 {
+	import com.xiaocai.skins.ISkin;
+	
+	import flash.utils.getQualifiedClassName;
+	
 	import starling.display.Sprite;
 	import starling.events.Event;
 	
@@ -9,17 +13,22 @@ package com.xiaocai.components
 	{
 		public static const DRAW:String = "draw";
 		
-		protected var _width:Number;
-		protected var _height:Number;
-		protected var _tag:int = -1;
+		protected var _width:Number = 0;
+		protected var _height:Number = 0;
 		protected var _enabled:Boolean = true;
+		protected var _skin:ISkin = null;
 		protected var _data:Object = null;
 		
-		public function Component(xpos:Number = 0, ypos:Number = 0)
+		protected var _isInvalid:Boolean = false;
+		
+		public function Component(xpos:Number = 0, ypos:Number = 0, skin:Object=null)
 		{
 			super();
 			move(xpos, ypos);
 			init();
+			
+			if (skin)
+				this.skin = skin;
 		}
 		
 		protected function init():void
@@ -35,13 +44,18 @@ package com.xiaocai.components
 		
 		protected function invalidate():void
 		{
-			addEventListener(Event.ENTER_FRAME, onInvalidate);
+			if (!_isInvalid)
+			{
+				addEventListener(Event.ENTER_FRAME, onInvalidate);
+				_isInvalid = true;
+			}
 		}
 		
 		protected function onInvalidate(e:Event):void
 		{
 			removeEventListener(Event.ENTER_FRAME, onInvalidate);
 			draw();
+			_isInvalid = false;
 		}
 		
 		///////////////////////////////////
@@ -50,15 +64,19 @@ package com.xiaocai.components
 		
 		public function draw():void
 		{
+			trace(getQualifiedClassName(this),"drawing...");
 			dispatchEvent(new Event(DRAW));
 		}
 		
 		public function setSize(w:Number, h:Number):void
 		{
-			_width = w;
-			_height = h;
-			dispatchEvent(new Event(Event.RESIZE));
-			invalidate();
+			if (_width != w || _height != h)
+			{
+				_width = w;
+				_height = h;
+				dispatchEvent(new Event(Event.RESIZE));
+				invalidate();
+			}
 		}
 		
 		public function move(xpos:Number, ypos:Number):void
@@ -69,19 +87,27 @@ package com.xiaocai.components
 		
 		override public function dispose():void
 		{
-			super.dispose();
+			if (_skin)
+				_skin.dispose();
+			
+			_skin = null;
 			_data = null;
+			
+			super.dispose();
 		}
 		
 		///////////////////////////////////
-		// getter/setters
+		// getters/setters
 		///////////////////////////////////
 		
 		override public function set width(w:Number):void
 		{
-			_width = w;
-			invalidate();
-			dispatchEvent(new Event(Event.RESIZE));
+			if (_width != w)
+			{
+				_width = w;
+				invalidate();
+				dispatchEvent(new Event(Event.RESIZE));
+			}
 		}
 		
 		override public function get width():Number
@@ -91,14 +117,34 @@ package com.xiaocai.components
 		
 		override public function set height(h:Number):void
 		{
-			_height = h;
-			invalidate();
-			dispatchEvent(new Event(Event.RESIZE));
+			if (_height != h)
+			{
+				_height = h;
+				invalidate();
+				dispatchEvent(new Event(Event.RESIZE));
+			}
 		}
 		
 		override public function get height():Number
 		{
 			return _height;
+		}
+		
+		public function set skin(value:Object):void
+		{
+			if (_skin)
+				_skin.dispose();
+			
+			if (value is Class)
+			{
+				_skin = new value() as ISkin;
+				_skin.hostComponent = this;
+			}
+			else if(value is ISkin)
+			{
+				_skin = value as ISkin;
+				_skin.hostComponent = this;
+			}
 		}
 		
 		public function set enabled(value:Boolean):void
