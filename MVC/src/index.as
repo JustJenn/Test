@@ -1,6 +1,7 @@
 package
 {
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.geom.Rectangle;
 	
 	import starling.core.Starling;
@@ -27,7 +28,9 @@ package
 			_starling.showStats = true;
 			_starling.simulateMultitouch = false;
 			_starling.enableErrorChecking = false;
-			_starling.start();
+			_starling.stage3D.addEventListener(Event.CONTEXT3D_CREATE, function(e:Event):void{
+				_starling.start();
+			});
 
 		}
 	}
