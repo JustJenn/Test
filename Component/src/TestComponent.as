@@ -39,7 +39,7 @@ package
 		
 		private function test():void
 		{
-			var lbl:Label = new Label(300,200, "just test.");
+			var lbl:Label = new Label(300,200, "justtestasdad.");
 			lbl.setSize(100,20);
 			addChild(lbl);
 			
