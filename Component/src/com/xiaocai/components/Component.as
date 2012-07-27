@@ -6,10 +6,11 @@ package com.xiaocai.components
 	
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.extensions.ClippedSprite;
 	
 	[Event(name="resize", type="starling.events.Event")]
 	[Event(name="draw", type="starling.events.Event")]
-	public class Component extends Sprite
+	public class Component extends ClippedSprite
 	{
 		public static const DRAW:String = "draw";
 		
