@@ -2,7 +2,8 @@ package com.xiaocai.components
 {
 	import flash.geom.Point;
 	import flash.system.Capabilities;
-	import flash.utils.getTimer;
+	
+	import gs.TweenLite;
 	
 	import starling.events.Event;
 	import starling.events.Touch;
@@ -19,9 +20,6 @@ package com.xiaocai.components
 		protected var _maxHorizontalScrollPosition:Number;
 		protected var _maxVerticalScrollPosition:Number;
 		
-		protected var _horizontalScrollBarHeightOffset:Number;
-		protected var _verticalScrollBarWidthOffset:Number;
-		
 		private var _touchPointID:int = -1;
 		private var _startTouchX:Number;
 		private var _startTouchY:Number;
@@ -32,10 +30,12 @@ package com.xiaocai.components
 		
 		private var _isDraggingHorizontally:Boolean = false;
 		private var _isDraggingVertically:Boolean = false;
-		private var _isScrollingStopped:Boolean = false;
 		
 		private var _horizontalScrollPosition:Number = 0;
 		private var _verticalScrollPosition:Number = 0;
+		
+		private var _horizontalScrollBarHideTween:TweenLite;
+		private var _verticalScrollBarHideTween:TweenLite;
 		
 		public function Scroller(xpos:Number=0, ypos:Number=0, skin:Object=null)
 		{
@@ -54,12 +54,14 @@ package com.xiaocai.components
 			
 			_horizontalScrollBar = new ScrollBar(ScrollBar.HORIZONTAL);
 			_horizontalScrollBar.y = _height - _horizontalScrollBar.height;
-			_horizontalScrollBar.width = _width;
+			_horizontalScrollBar.width = _width - 10;
+			_horizontalScrollBar.alpha = 0;
 			addChild(_horizontalScrollBar);
 			
 			_verticalScrollBar = new ScrollBar(ScrollBar.VERTICAL);
 			_verticalScrollBar.x = _width - _verticalScrollBar.width;
-			_verticalScrollBar.height = _height;
+			_verticalScrollBar.height = _height - 10;
+			_verticalScrollBar.alpha = 0;
 			addChild(_verticalScrollBar);
 		}
 		
@@ -84,7 +86,6 @@ package com.xiaocai.components
 			_startVerticalScrollPosition = _verticalScrollPosition;
 			_isDraggingHorizontally = false;
 			_isDraggingVertically = false;
-			_isScrollingStopped = false;
 			
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			
@@ -93,37 +94,41 @@ package com.xiaocai.components
 		
 		protected function onEnterFrame(e:Event):void
 		{
-			if(_isScrollingStopped)
-				return;
-			
 			const horizontalInchesMoved:Number = Math.abs(_currentTouchX - _startTouchX) / Capabilities.screenDPI;
 			const verticalInchesMoved:Number = Math.abs(_currentTouchY - _startTouchY) / Capabilities.screenDPI;
 			if(!_isDraggingHorizontally && horizontalInchesMoved >= MINIMUM_DRAG_DISTANCE)
 			{
 				if(_horizontalScrollBar)
 				{
+					if (_horizontalScrollBarHideTween)
+					{
+						TweenLite.removeTween(_horizontalScrollBarHideTween);
+						_horizontalScrollBarHideTween = null;
+					}
 					_horizontalScrollBar.alpha = 1;
 				}
 				_isDraggingHorizontally = true;
 			}
 			if(!_isDraggingVertically && verticalInchesMoved >= MINIMUM_DRAG_DISTANCE)
 			{
-				if(!_isDraggingHorizontally)
+				if(_verticalScrollBar)
 				{
-					if(_verticalScrollBar)
+					if (_verticalScrollBarHideTween)
 					{
-						_verticalScrollBar.alpha = 1;
+						TweenLite.removeTween(_verticalScrollBarHideTween);
+						_verticalScrollBarHideTween = null;
 					}
+					_verticalScrollBar.alpha = 1;
 				}
 				_isDraggingVertically = true;
 			}
 			if(_isDraggingHorizontally)
 			{
-				updateHorizontalScrollFromTouchPosition(_currentTouchX);
+				updateHorizontalScrollPosition(_currentTouchX);
 			}
 			if(_isDraggingVertically)
 			{
-				updateVerticalScrollFromTouchPosition(_currentTouchY);
+				updateVerticalScrollPosition(_currentTouchY);
 			}
 		}
 		
@@ -144,42 +149,25 @@ package com.xiaocai.components
 				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 				stage.removeEventListener(TouchEvent.TOUCH, onStageTouch);
 				_touchPointID = -1;
-				var isFinishingHorizontally:Boolean = false;
-				var isFinishingVertically:Boolean = false;
-				if(_horizontalScrollPosition < 0 || _horizontalScrollPosition > _maxHorizontalScrollPosition)
-				{
-					isFinishingHorizontally = true;
-					finishScrollingHorizontally();
-				}
-				if(_verticalScrollPosition < 0 || _verticalScrollPosition > _maxVerticalScrollPosition)
-				{
-					isFinishingVertically = true;
-					finishScrollingVertically();
-				}
-				if(isFinishingHorizontally && isFinishingVertically)
-				{
-					return;
-				}
 				
-				if(!isFinishingHorizontally && _isDraggingHorizontally)
-				{
-				}
-				else
-				{
-					hideHorizontalScrollBar();
-				}
-				
-				if(!isFinishingVertically && _isDraggingVertically)
-				{
-				}
-				else
-				{
-					hideVerticalScrollBar();
-				}
+				checkHorizontalScrollPosition();
+				checkVerticalScrollPosition();
 			}
 		}
 		
-		protected function updateHorizontalScrollFromTouchPosition(touchX:Number):void
+		protected function checkHorizontalScrollPosition():void
+		{
+			finishScrollingHorizontally();
+			hideHorizontalScrollBar();
+		}
+		
+		protected function checkVerticalScrollPosition():void
+		{
+			finishScrollingVertically();
+			hideVerticalScrollBar();
+		}
+		
+		protected function updateHorizontalScrollPosition(touchX:Number):void
 		{
 			const offset:Number = _startTouchX - touchX;
 			var position:Number = _startHorizontalScrollPosition + offset;
@@ -195,7 +183,7 @@ package com.xiaocai.components
 			horizontalScrollPosition = position;
 		}
 		
-		protected function updateVerticalScrollFromTouchPosition(touchY:Number):void
+		protected function updateVerticalScrollPosition(touchY:Number):void
 		{
 			const offset:Number = _startTouchY - touchY;
 			var position:Number = _startVerticalScrollPosition + offset;
@@ -213,7 +201,7 @@ package com.xiaocai.components
 		
 		private function finishScrollingHorizontally():void
 		{
-			var targetHorizontalScrollPosition:Number = NaN;
+			var targetHorizontalScrollPosition:Number = _horizontalScrollPosition;
 			if(_horizontalScrollPosition < 0)
 			{
 				targetHorizontalScrollPosition = 0;
@@ -228,7 +216,7 @@ package com.xiaocai.components
 		
 		private function finishScrollingVertically():void
 		{
-			var targetVerticalScrollPosition:Number = NaN;
+			var targetVerticalScrollPosition:Number = _verticalScrollPosition;
 			if(_verticalScrollPosition < 0)
 			{
 				targetVerticalScrollPosition = 0;
@@ -242,24 +230,45 @@ package com.xiaocai.components
 			verticalScrollPosition = targetVerticalScrollPosition;
 		}
 		
-		public function throwTo(targetHorizontalScrollPosition:Number = NaN, targetVerticalScrollPosition:Number = NaN, duration:Number = 0.25):void
+		protected function hideHorizontalScrollBar():void
 		{
+			_horizontalScrollBarHideTween = TweenLite.to(_horizontalScrollBar, 0.3, {alpha:0, onComplete:hideHorizontalScrollBarComplete});
 		}
 		
 		protected function hideVerticalScrollBar():void
 		{
+			_verticalScrollBarHideTween = TweenLite.to(_verticalScrollBar, 0.3, {alpha:0, onComplete:hideVerticalScrollBarComplete});
 		}
 		
-		protected function hideHorizontalScrollBar():void
+		
+		protected function hideHorizontalScrollBarComplete():void
 		{
+			TweenLite.removeTween(_horizontalScrollBarHideTween);
+			_horizontalScrollBarHideTween = null;
+		}
+		
+		protected function hideVerticalScrollBarComplete():void
+		{
+			TweenLite.removeTween(_verticalScrollBarHideTween);
+			_verticalScrollBarHideTween = null;
+		}
+		
+		protected function throwHorizontalBar():void
+		{
+			
+		}
+		
+		protected function throwVerticalBar():void
+		{
+			
 		}
 		
 		override public function draw():void
 		{
 			super.draw();
 			
-			_horizontalScrollBar.maximum = _maxHorizontalScrollPosition + _width;
-			_verticalScrollBar.maximum = _maxVerticalScrollPosition + _height;
+			_horizontalScrollBar.maximum = _maxHorizontalScrollPosition + _horizontalScrollBar.width;
+			_verticalScrollBar.maximum = _maxVerticalScrollPosition + _verticalScrollBar.height;
 			_horizontalScrollBar.value = _horizontalScrollPosition;
 			_verticalScrollBar.value = _verticalScrollPosition;
 			

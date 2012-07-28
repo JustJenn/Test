@@ -28,6 +28,9 @@ package
 		[Embed(source="assets/notselected.png")]
 		private var notselected:Class;
 		
+		[Embed(source="assets/Lighthouse.jpg")]
+		private var lightHouse:Class;
+		
 		public function TestComponent()
 		{
 			super();
@@ -49,11 +52,11 @@ package
 //			var input:TextInput = new TextInput(Math.random()*960,Math.random()*640,skin,"默认");
 //			addChild(input);
 //			
-			var down:Texture = Texture.fromBitmap(new downSkin());
-			var up:Texture = Texture.fromBitmap(new upSkin());
-			
-			var btn:Button = new Button(500,300,new ButtonSkin(up, down),"按钮");
-			addChild(btn);
+//			var down:Texture = Texture.fromBitmap(new downSkin());
+//			var up:Texture = Texture.fromBitmap(new upSkin());
+//			
+//			var btn:Button = new Button(500,300,new ButtonSkin(up, down),"按钮");
+//			addChild(btn);
 //			
 //			var stxt:Texture = Texture.fromBitmap(new selected());
 //			var nstxt:Texture = Texture.fromBitmap(new notselected());
@@ -61,24 +64,10 @@ package
 //			var checkBox:CheckBox = new CheckBox(150,200,boxSkin,"check");
 //			addChild(checkBox);
 			
-			
-//			var scrollBar:ScrollBar = new ScrollBar(ScrollBar.HORIZONTAL, 200, 100);
-//			scrollBar.maximum = 500;
-//			addChild(scrollBar);
-//			
-//			var func:Function = function ():void
-//			{
-//				scrollBar.value += 5;
-//				setTimeout(func, 100);
-//			}
-//			
-//			setTimeout(func, 100);
-			
-			
 			var txt:Texture = Texture.fromBitmap(new input());
 			var skin:Skin = new Skin(txt);
 			
-			var select:Texture = Texture.fromBitmap(new selected());
+			var select:Texture = Texture.fromBitmap(new lightHouse());
 			var skin1:Skin = new Skin(select);
 			
 			list = new Component(100,20, skin);
@@ -87,7 +76,7 @@ package
 			addChild(list);
 			
 			host = new Component(0,0,skin1);
-			host.setSize(1200,1200);
+			host.setSize(1024,768);
 			list.addChild(host);
 			
 			
