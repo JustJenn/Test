@@ -90,6 +90,7 @@ package com.xiaocai.components
 		{
 			removeEventListener(TouchEvent.TOUCH, onTouch);
 			removeChild(_label, true);
+			_label = null;
 			
 			super.dispose();
 		}

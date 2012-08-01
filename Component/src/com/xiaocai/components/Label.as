@@ -45,6 +45,7 @@ package com.xiaocai.components
 		override public function dispose():void
 		{
 			removeChild(_textField, true);
+			_textField = null;
 			
 			super.dispose();
 		}

@@ -167,14 +167,19 @@ package com.xiaocai.components
 			_stageText.removeEventListener(FocusEvent.FOCUS_IN, onStageTextFocusIn);
 			_stageText.removeEventListener(FocusEvent.FOCUS_OUT, onStageTextFocusOut);
 			_stageText.dispose();
+			_stageText = null;
 			
 			if (_snapshotBitmapData)
+			{
 				_snapshotBitmapData.dispose();
+				_snapshotBitmapData = null;
+			}
 			
 			if (_snapshotImage)
 			{
 				_snapshotImage.texture.dispose();
 				removeChild(_snapshotImage, true);
+				_snapshotImage = null;
 			}
 			super.dispose();
 		}

@@ -4,36 +4,23 @@ package com.xiaocai.components
 
 	public class ScrollBar extends Component
 	{
-		public static const HORIZONTAL:String = "horizontal";
-		public static const VERTICAL:String = "vertical";
-		
-		private static const PADDING_LEFT:int = 1;
-		private static const PADDING_TOP:int = 1;
+		protected static const PADDING_LEFT:int = 1;
+		protected static const PADDING_TOP:int = 1;
 		
 		protected var _thumb:Quad;
 		protected var _track:Quad;
-		protected var _orientation:String;
 		protected var _maximum:Number = 1;
 		protected var _minimum:Number = 0;
 		protected var _value:Number = 0;
 		
-		public function ScrollBar(orientation:String=ScrollBar.VERTICAL, xpos:Number=0, ypos:Number=0)
+		public function ScrollBar(xpos:Number=0, ypos:Number=0)
 		{
-			_orientation = orientation;
 			super(xpos, ypos);
 		}
 		
 		override protected function init():void
 		{
 			super.init();
-			if (_orientation == VERTICAL)
-			{
-				setSize(10, 100);
-			}
-			else
-			{
-				setSize(100, 10);
-			}
 			touchable = false;
 		}
 		
@@ -51,61 +38,31 @@ package com.xiaocai.components
 			addChild(_thumb);
 		}
 		
+		///////////////////////////////////
+		// public methods
+		///////////////////////////////////
 		override public function draw():void
 		{
 			super.draw();
 			
 			_track.width = _width;
 			_track.height = _height;
-			
-			if (_orientation == VERTICAL)
-			{
-				var thumbHeight:Number = Math.round((_height - 2*PADDING_TOP) * (_height / _maximum));
-				var thumbY:Number = Math.round(_value / (_maximum - _height) * (_height - 2*PADDING_TOP - thumbHeight)) + PADDING_TOP;
-				
-				if(thumbY < PADDING_TOP)
-				{
-					thumbHeight -= (PADDING_TOP - thumbY);
-					thumbY = PADDING_TOP;
-				}
-				if(thumbY > _height - PADDING_TOP - thumbHeight)
-				{
-					thumbHeight -= thumbY + thumbHeight - (_height - PADDING_TOP);
-				}
-				
-				_thumb.width = _width - PADDING_LEFT;
-				_thumb.height = thumbHeight;
-				_thumb.y = thumbY;
-			}
-			else
-			{
-				var thumbWidth:Number = Math.round((_width - 2*PADDING_LEFT) * (_width / _maximum));
-				var thumbX:Number = Math.round(_value / (_maximum - _width) * (_width - 2*PADDING_LEFT - thumbWidth)) + PADDING_LEFT;
-				
-				if(thumbX < PADDING_LEFT)
-				{
-					thumbWidth -= (PADDING_LEFT - thumbX);
-					thumbX = PADDING_LEFT;
-				}
-				if(thumbX > _width - PADDING_LEFT - thumbWidth)
-				{
-					thumbWidth -= thumbX + thumbWidth - (_width - PADDING_LEFT);
-				}
-				
-				_thumb.width = thumbWidth;
-				_thumb.height = _height - PADDING_TOP;
-				_thumb.x = thumbX;
-			}
 		}
 		
 		override public function dispose():void
 		{
 			removeChild(_track, true);
+			_track = null;
+			
 			removeChild(_thumb, true);
+			_thumb = null;
 			
 			super.dispose();
 		}
 		
+		///////////////////////////////////
+		// getters/setters
+		///////////////////////////////////
 		public function set value(num:Number):void
 		{
 			if (_value != num)

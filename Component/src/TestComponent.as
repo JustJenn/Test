@@ -2,6 +2,8 @@ package
 {
 	import com.xiaocai.components.Button;
 	import com.xiaocai.components.Component;
+	import com.xiaocai.components.Panel;
+	import com.xiaocai.components.ScrollablePanel;
 	import com.xiaocai.components.Scroller;
 	import com.xiaocai.skins.ButtonSkin;
 	import com.xiaocai.skins.Skin;
@@ -9,6 +11,7 @@ package
 	import flash.geom.Rectangle;
 	
 	import starling.display.BlendMode;
+	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.textures.Texture;
 	
@@ -70,20 +73,31 @@ package
 			var select:Texture = Texture.fromBitmap(new lightHouse());
 			var skin1:Skin = new Skin(select);
 			
-			list = new Component(100,20, skin);
-			list.setSize(300,300);
-			list.clipRect = new Rectangle(100,20,300,300);
-			addChild(list);
+//			list = new Component(100,20, skin);
+//			list.setSize(300,300);
+//			addChild(list);
+//			
+//			host = new Component(0,0,skin1);
+//			host.setSize(1024,768);
+//			list.clipRect = new Rectangle(100,20,300,300);
+//			list.addChild(host);
+//			
+//
+//			var scroll:Scroller = new Scroller();
+//			list.addChild(scroll);
+//			scroll.hostComponent = host;
 			
-			host = new Component(0,0,skin1);
-			host.setSize(1024,768);
-			list.addChild(host);
+			var panel:Panel = new ScrollablePanel(400, 100);
+			panel.setSize(100,100);
+			addChild(panel);
 			
+			var img:Image = new Image(select);
+			panel.addRawChild(img);
 			
-			
-			var scroll:Scroller = new Scroller();
-			list.addChild(scroll);
-			scroll.hostComponent = host;
+//			var img2:Image = new Image(select);
+//			img2.x = img.width;
+//			panel.addRawChild(img2);
+		
 		}
 	}
 }
