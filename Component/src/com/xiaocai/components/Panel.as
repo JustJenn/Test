@@ -4,12 +4,10 @@ package com.xiaocai.components
 	
 	import starling.display.DisplayObject;
 
-	public class Panel extends Component
+	public class Panel extends ClippedComponent
 	{
 		protected var _content:Component;
-		protected var _clipRect:Rectangle;
 		protected var _boundsRect:Rectangle;
-		protected var _changeClip:Boolean = false;
 		
 		public function Panel(xpos:Number=0, ypos:Number=0, skin:Object=null)
 		{
@@ -60,64 +58,15 @@ package com.xiaocai.components
 			return children;
 		}
 		
-		override public function move(xpos:Number, ypos:Number):void
-		{
-			super.move(xpos, ypos);
-			_clipRect.x = xpos;
-			_clipRect.y = ypos;
-			_changeClip = true;
-		}
-		
-		override public function setSize(w:Number, h:Number):void
-		{
-			super.setSize(w, h);
-			_clipRect.width = w;
-			_clipRect.height = h;
-			_changeClip = true;
-		}
-		
 		override public function draw():void
 		{
 			super.draw();
-			if (_changeClip)
-			{
-				_content.clipRect = _clipRect;
-				_changeClip = false;
-			}
 			_content.setSize(_boundsRect.width, _boundsRect.height);
 		}
 		
 		public function get content():Component
 		{
 			return _content;
-		}
-		
-		override public function set x(value:Number):void
-		{
-			super.x = value;
-			_clipRect.x = value;
-			_changeClip = true;
-		}
-		
-		override public function set y(value:Number):void
-		{
-			super.y = value;
-			_clipRect.y = value;
-			_changeClip = true;
-		}
-		
-		override public function set width(w:Number):void
-		{
-			super.width = w;
-			_clipRect.width = w;
-			_changeClip = true;
-		}
-		
-		override public function set height(h:Number):void
-		{
-			super.height = h;
-			_clipRect.height = h;
-			_changeClip = true;
 		}
 	}
 }

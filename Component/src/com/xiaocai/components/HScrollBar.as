@@ -1,5 +1,7 @@
 package com.xiaocai.components
 {
+	import com.xiaocai.components.supportClasses.ScrollBar;
+
 	public class HScrollBar extends ScrollBar
 	{
 		public function HScrollBar(xpos:Number=0, ypos:Number=0)

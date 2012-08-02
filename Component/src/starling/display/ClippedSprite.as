@@ -1,4 +1,4 @@
-package starling.extensions
+package starling.display
 {
     import flash.display3D.Context3D;
     import flash.geom.Point;
@@ -6,8 +6,6 @@ package starling.extensions
     
     import starling.core.RenderSupport;
     import starling.core.Starling;
-    import starling.display.DisplayObject;
-    import starling.display.Sprite;
     import starling.errors.MissingContextError;
     
     public class ClippedSprite extends Sprite

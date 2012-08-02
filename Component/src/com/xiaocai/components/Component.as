@@ -6,7 +6,7 @@ package com.xiaocai.components
 	
 	import starling.display.Sprite;
 	import starling.events.Event;
-	import starling.extensions.ClippedSprite;
+	import starling.display.ClippedSprite;
 	
 	[Event(name="resize", type="starling.events.Event")]
 	[Event(name="draw", type="starling.events.Event")]

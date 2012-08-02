@@ -1,6 +1,7 @@
-package com.xiaocai.components
+package com.xiaocai.components.supportClasses
 {
 	import starling.display.Quad;
+	import com.xiaocai.components.Component;
 
 	public class ScrollBar extends Component
 	{

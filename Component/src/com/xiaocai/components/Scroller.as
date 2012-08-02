@@ -2,8 +2,6 @@ package com.xiaocai.components
 {
 	import flash.geom.Point;
 	import flash.system.Capabilities;
-	import flash.utils.Timer;
-	import flash.utils.getTimer;
 	
 	import gs.TweenLite;
 	
@@ -12,8 +10,11 @@ package com.xiaocai.components
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 
+	[Event(name="change", type="starling.events.Event")]
 	public class Scroller extends Component
 	{
+		public static const CHANGE:String = "change";
+		
 		private static const MINIMUM_DRAG_DISTANCE:Number = 0.04;
 		
 		protected var _horizontalScrollBar:HScrollBar;
@@ -103,11 +104,10 @@ package com.xiaocai.components
 		
 		protected function onEnterFrame(e:Event):void
 		{
-			var horizontalInchesMoved:Number = Math.abs(_currentTouchX - _startTouchX) / Capabilities.screenDPI;
-			var verticalInchesMoved:Number = Math.abs(_currentTouchY - _startTouchY) / Capabilities.screenDPI;
-			if(!_isDraggingHorizontally && horizontalInchesMoved >= MINIMUM_DRAG_DISTANCE)
+			if(!_isDraggingHorizontally)
 			{
-				if(_horizontalScrollEnabled)
+				var horizontalInchesMoved:Number = Math.abs(_currentTouchX - _startTouchX) / Capabilities.screenDPI;
+				if(_horizontalScrollEnabled && horizontalInchesMoved >= MINIMUM_DRAG_DISTANCE)
 				{
 					if (_horizontalScrollBarHideTween)
 					{
@@ -118,9 +118,10 @@ package com.xiaocai.components
 					_isDraggingHorizontally = true;
 				}
 			}
-			if(!_isDraggingVertically && verticalInchesMoved >= MINIMUM_DRAG_DISTANCE)
+			if(!_isDraggingVertically)
 			{
-				if(_verticalScrollEnabled)
+				var verticalInchesMoved:Number = Math.abs(_currentTouchY - _startTouchY) / Capabilities.screenDPI;
+				if(_verticalScrollEnabled && verticalInchesMoved >= MINIMUM_DRAG_DISTANCE)
 				{
 					if (_verticalScrollBarHideTween)
 					{
@@ -152,6 +153,7 @@ package com.xiaocai.components
 				var location:Point = touch.getLocation(this);
 				_currentTouchX = location.x;
 				_currentTouchY = location.y;
+				dispatchEventWith(CHANGE);
 			}
 			else if(touch.phase == TouchPhase.ENDED)
 			{
@@ -184,7 +186,7 @@ package com.xiaocai.components
 		
 		protected function updateHorizontalScrollPosition(touchX:Number):void
 		{
-			const offset:Number = _startTouchX - touchX;
+			var offset:Number = _startTouchX - touchX;
 			var position:Number = _startHorizontalScrollPosition + offset;
 			if(position < 0)
 			{

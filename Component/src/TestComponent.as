@@ -88,7 +88,7 @@ package
 //			scroll.hostComponent = host;
 			
 			var panel:Panel = new ScrollablePanel(400, 100);
-			panel.setSize(100,100);
+			panel.setSize(400,290);
 			addChild(panel);
 			
 			var img:Image = new Image(select);

@@ -1,5 +1,7 @@
 package com.xiaocai.components
 {
+	import com.xiaocai.components.supportClasses.ScrollBar;
+
 	public class VScrollBar extends ScrollBar
 	{
 		public function VScrollBar(xpos:Number=0, ypos:Number=0)
@@ -28,6 +30,13 @@ package com.xiaocai.components
 			if(thumbY > _height - PADDING_TOP - thumbHeight)
 			{
 				thumbHeight -= thumbY + thumbHeight - (_height - PADDING_TOP);
+				if (thumbY > _height - 2*PADDING_TOP)
+					thumbY = _height - 2*PADDING_TOP;
+			}
+			
+			if (thumbHeight < PADDING_TOP)
+			{
+				thumbHeight = PADDING_TOP;
 			}
 			
 			_thumb.width = _width - PADDING_LEFT;
