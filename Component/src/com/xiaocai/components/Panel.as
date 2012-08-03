@@ -30,6 +30,20 @@ package com.xiaocai.components
 			addChild(_content);
 		}
 		
+		override public function draw():void
+		{
+			super.draw();
+			_content.setSize(_boundsRect.width, _boundsRect.height);
+		}
+		
+		override public function dispose():void
+		{
+			removeChild(_content, true);
+			_content = null;
+			
+			super.dispose();
+		}
+		
 		public function addRawChild(child:DisplayObject):DisplayObject
 		{
 			var children:DisplayObject = _content.addChild(child);
@@ -56,12 +70,6 @@ package com.xiaocai.components
 			var children:DisplayObject = _content.removeChildAt(index, dispose);
 			getBounds(_content, _boundsRect);
 			return children;
-		}
-		
-		override public function draw():void
-		{
-			super.draw();
-			_content.setSize(_boundsRect.width, _boundsRect.height);
 		}
 		
 		public function get content():Component

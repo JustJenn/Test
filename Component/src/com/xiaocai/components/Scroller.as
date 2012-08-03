@@ -153,7 +153,6 @@ package com.xiaocai.components
 				var location:Point = touch.getLocation(this);
 				_currentTouchX = location.x;
 				_currentTouchY = location.y;
-				dispatchEventWith(CHANGE);
 			}
 			else if(touch.phase == TouchPhase.ENDED)
 			{
@@ -289,7 +288,11 @@ package com.xiaocai.components
 				_horizontalScrollBar.width = _width - 10;
 				_horizontalScrollBar.maximum = _maxHorizontalScrollPosition + _horizontalScrollBar.width;
 				_horizontalScrollBar.value = _horizontalScrollPosition;
-				_hostComponent.x = - _horizontalScrollPosition;
+				if (_hostComponent.x != - _horizontalScrollPosition)
+				{
+					_hostComponent.x = - _horizontalScrollPosition;
+					dispatchEventWith(CHANGE);
+				}
 			}
 			if (_verticalScrollBar)
 			{
@@ -297,7 +300,11 @@ package com.xiaocai.components
 				_verticalScrollBar.height = _height - 10;
 				_verticalScrollBar.maximum = _maxVerticalScrollPosition + _verticalScrollBar.height;
 				_verticalScrollBar.value = _verticalScrollPosition;
-				_hostComponent.y = - _verticalScrollPosition;
+				if (_hostComponent.y != - _verticalScrollPosition)
+				{
+					_hostComponent.y = - _verticalScrollPosition;
+					dispatchEventWith(CHANGE);
+				}
 			}
 		}
 		

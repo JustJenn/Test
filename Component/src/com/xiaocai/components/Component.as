@@ -82,8 +82,8 @@ package com.xiaocai.components
 		
 		public function move(xpos:Number, ypos:Number):void
 		{
-			x = Math.round(xpos);
-			y = Math.round(ypos);
+			super.x = Math.round(xpos);
+			super.y = Math.round(ypos);
 		}
 		
 		override public function dispose():void

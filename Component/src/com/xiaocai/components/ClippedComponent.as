@@ -1,31 +1,39 @@
 package com.xiaocai.components
 {
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
 	public class ClippedComponent extends Component
 	{
 		protected var _clipRect:Rectangle;
+		protected var _localPt:Point;
+		protected var _globalPt:Point;
 		protected var _changeClip:Boolean = false;
 		public function ClippedComponent(xpos:Number=0, ypos:Number=0, skin:Object=null)
 		{
 			_clipRect = new Rectangle();
+			_localPt = new Point(0, 0);
+			_globalPt = new Point(0, 0);
 			super(xpos, ypos, skin);
 		}
 		
 		override public function move(xpos:Number, ypos:Number):void
 		{
-			super.move(xpos, ypos);
-			_clipRect.x = xpos;
-			_clipRect.y = ypos;
-			_changeClip = true;
+			if (x != xpos || y != ypos)
+			{
+				_changeClip = true;
+				super.move(xpos, ypos);
+				invalidate();
+			}
 		}
 		
 		override public function setSize(w:Number, h:Number):void
 		{
-			super.setSize(w, h);
-			_clipRect.width = w;
-			_clipRect.height = h;
-			_changeClip = true;
+			if (_width != w || _height != h)
+			{
+				_changeClip = true;
+				super.setSize(w, h);
+			}
 		}
 		
 		override public function draw():void
@@ -33,6 +41,9 @@ package com.xiaocai.components
 			super.draw();
 			if (_changeClip)
 			{
+				localToGlobal(_localPt, _globalPt);
+				
+				_clipRect.setTo(_globalPt.x, _globalPt.y, _width, _height);
 				clipRect = _clipRect;
 				_changeClip = false;
 			}
@@ -42,9 +53,8 @@ package com.xiaocai.components
 		{
 			if (x != value)
 			{
-				super.x = value;
-				_clipRect.x = value;
 				_changeClip = true;
+				super.x = value;
 				invalidate();
 			}
 		}
@@ -53,9 +63,8 @@ package com.xiaocai.components
 		{
 			if (y != value)
 			{
-				super.y = value;
-				_clipRect.y = value;
 				_changeClip = true;
+				super.y = value;
 				invalidate();
 			}
 		}
@@ -64,9 +73,8 @@ package com.xiaocai.components
 		{
 			if (_width != w)
 			{
-				super.width = w;
-				_clipRect.width = w;
 				_changeClip = true;
+				super.width = w;
 			}
 		}
 		
@@ -74,9 +82,8 @@ package com.xiaocai.components
 		{
 			if (_height != h)
 			{
-				super.height = h;
-				_clipRect.height = h;
 				_changeClip = true;
+				super.height = h;
 			}
 		}
 	}

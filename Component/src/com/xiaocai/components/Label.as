@@ -62,8 +62,11 @@ package com.xiaocai.components
 		
 		public function set text(value:String):void
 		{
-			_text = value || "";
-			invalidate();
+			if (_text != value)
+			{
+				_text = value;
+				invalidate();
+			}
 		}
 		
 		public function get text():String

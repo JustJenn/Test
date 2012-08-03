@@ -2,6 +2,7 @@ package
 {
 	import com.xiaocai.components.Button;
 	import com.xiaocai.components.Component;
+	import com.xiaocai.components.List;
 	import com.xiaocai.components.Panel;
 	import com.xiaocai.components.ScrollablePanel;
 	import com.xiaocai.components.Scroller;
@@ -93,6 +94,12 @@ package
 			
 			var img:Image = new Image(select);
 			panel.addRawChild(img);
+			
+			var list:List = new List(30, 150, 100);
+			addChild(list);
+			
+			list.data = ["阿斯顿阿斯顿0","阿斯顿阿斯顿1","阿斯顿阿斯顿2","阿斯顿阿斯顿3","阿斯顿阿斯顿4","阿斯顿阿斯顿5","阿斯顿阿斯顿6","阿斯顿阿斯顿7","阿斯顿阿斯顿8"];
+			
 			
 //			var img2:Image = new Image(select);
 //			img2.x = img.width;
