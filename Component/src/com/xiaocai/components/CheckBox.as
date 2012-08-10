@@ -75,7 +75,6 @@ package com.xiaocai.components
 		
 		override public function dispose():void
 		{
-			removeEventListener(TouchEvent.TOUCH, onTouch);
 			removeChild(_label, true);
 			_label = null;
 			

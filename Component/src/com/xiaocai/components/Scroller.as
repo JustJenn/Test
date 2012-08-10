@@ -73,6 +73,8 @@ package com.xiaocai.components
 				_verticalScrollBar.alpha = 0;
 				addChild(_verticalScrollBar);
 			}
+			
+			addEventListener(Event.RESIZE, onResize);
 		}
 		
 		protected function onTouch(e:TouchEvent):void
@@ -268,11 +270,14 @@ package com.xiaocai.components
 			_verticalScrollBarHideTween = null;
 		}
 		
-		protected function onHostComponentResize(e:Event):void
+		protected function onResize(e:Event):void
 		{
-			_maxHorizontalScrollPosition = _hostComponent.width - _width;
-			_maxVerticalScrollPosition = _hostComponent.height - _height;
-			invalidate();
+			if (_hostComponent)
+			{
+				_maxHorizontalScrollPosition = _hostComponent.width - _width;
+				_maxVerticalScrollPosition = _hostComponent.height - _height;
+				invalidate();
+			}
 		}
 		
 		///////////////////////////////////
@@ -323,7 +328,7 @@ package com.xiaocai.components
 			if (_hostComponent)
 			{
 				_hostComponent.removeEventListener(TouchEvent.TOUCH, onTouch);
-				_hostComponent.removeEventListener(Event.RESIZE, onHostComponentResize);
+				_hostComponent.removeEventListener(Event.RESIZE, onResize);
 				_hostComponent = null;
 			}
 			super.dispose();
@@ -339,7 +344,7 @@ package com.xiaocai.components
 			
 			_hostComponent = value;
 			_hostComponent.addEventListener(TouchEvent.TOUCH, onTouch);
-			_hostComponent.addEventListener(Event.RESIZE, onHostComponentResize);
+			_hostComponent.addEventListener(Event.RESIZE, onResize);
 			_maxHorizontalScrollPosition = _hostComponent.width - _width;
 			_maxVerticalScrollPosition = _hostComponent.height - _height;
 		}

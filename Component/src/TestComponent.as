@@ -98,9 +98,13 @@ package
 			var list:List = new List(30, 150, 100);
 			addChild(list);
 			
-			list.data = ["阿斯顿阿斯顿0","阿斯顿阿斯顿1","阿斯顿阿斯顿2","阿斯顿阿斯顿3","阿斯顿阿斯顿4","阿斯顿阿斯顿5","阿斯顿阿斯顿6","阿斯顿阿斯顿7","阿斯顿阿斯顿8"];
-			
-			
+			var data:Array = new Array();
+			for (var i:int=0;i<100;i++)
+			{
+				data.push("列表选项"+i);
+			}
+			list.data = data;
+			list.setSize(100, 500);
 //			var img2:Image = new Image(select);
 //			img2.x = img.width;
 //			panel.addRawChild(img2);

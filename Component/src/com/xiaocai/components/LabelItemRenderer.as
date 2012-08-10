@@ -1,18 +1,20 @@
 package com.xiaocai.components
 {
 	import com.xiaocai.components.supportClasses.IItemRenderer;
+	import com.xiaocai.skins.ItemRendererSkin;
 	
-	import starling.display.Quad;
+	import flash.display.BitmapData;
+	
+	import starling.textures.Texture;
 	
 	public class LabelItemRenderer extends Component implements IItemRenderer
 	{
 		protected var _label:Label;
 		protected var _selected:Boolean = false;
-		protected var _index:int = 0;
-		protected var _bg:Quad;
-		public function LabelItemRenderer(xpos:Number=0, ypos:Number=0, skin:Object=null)
+		protected var _index:int = -1;
+		public function LabelItemRenderer(xpos:Number=0, ypos:Number=0)
 		{
-			super(xpos, ypos, skin);
+			super(xpos, ypos);
 		}
 		
 		override protected function init():void
@@ -24,8 +26,11 @@ package com.xiaocai.components
 		override protected function createChildren():void
 		{
 			super.createChildren();
-			_bg = new Quad(_width, _height, 0xffffff);
-			addChild(_bg);
+			
+			var notSelected:BitmapData = new BitmapData(_width, _height, false, 0xffffff);
+			var selected:BitmapData = new BitmapData(_width, _height, false, 0xff7100);
+			
+			skin = new ItemRendererSkin(Texture.fromBitmapData(notSelected), Texture.fromBitmapData(selected));
 			
 			_label = new Label();
 			_label.setSize(_width, _height);
@@ -40,8 +45,6 @@ package com.xiaocai.components
 				_label.text = _data as String;
 			
 			_label.setSize(_width, _height);
-			_bg.width = _width;
-			_bg.height = _height;
 		}
 		
 		override public function set data(value:Object):void
@@ -58,6 +61,8 @@ package com.xiaocai.components
 		public function set selected(value:Boolean):void
 		{
 			_selected = value;
+			if (_skin)
+				_skin.currentState = _selected? "selected":"notSelected";
 		}
 		
 		public function get index():int
