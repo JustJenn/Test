@@ -181,6 +181,10 @@ package com.xiaocai.components
 			}				
 		}
 		
+		///////////////////////////////////
+		// public methods
+		///////////////////////////////////
+		
 		override public function draw():void
 		{
 			super.draw();
@@ -210,6 +214,10 @@ package com.xiaocai.components
 			
 			super.dispose();
 		}
+		
+		///////////////////////////////////
+		// getters/setters
+		///////////////////////////////////
 		
 		override public function set data(value:Object):void
 		{

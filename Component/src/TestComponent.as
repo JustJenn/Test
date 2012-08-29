@@ -88,12 +88,12 @@ package
 //			list.addChild(scroll);
 //			scroll.hostComponent = host;
 			
-			var panel:Panel = new ScrollablePanel(400, 100);
-			panel.setSize(400,290);
-			addChild(panel);
-			
-			var img:Image = new Image(select);
-			panel.addRawChild(img);
+//			var panel:Panel = new ScrollablePanel(400, 100);
+//			panel.setSize(400,290);
+//			addChild(panel);
+//			
+//			var img:Image = new Image(select);
+//			panel.addRawChild(img);
 			
 			var list:List = new List(30, 150, 100);
 			addChild(list);
